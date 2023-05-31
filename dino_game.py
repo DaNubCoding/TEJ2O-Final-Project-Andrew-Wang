@@ -1,13 +1,8 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from emulator import Emulator
-    from main import App
-
 from gpiozero import LED, Button
 from time import sleep, time
 from random import uniform
 from math import ceil
+import sys
 
 class DinoGame:
     def __init__(self, leds: list[LED], button: Button) -> None:
@@ -16,27 +11,25 @@ class DinoGame:
         self.button = button
 
         # Create a shortcut reference to the LED that represents the dino
-        self.dino_led = self.app.leds[2]
-
-        # Initialize the special button to a function that starts the game
-        self.app.special_button.when_pressed = self.start
+        self.dino_led = self.leds[2]
 
     def run(self) -> None:
 
-        # Main control boolean, determines if the entire subprogram is running or not
-        self.running = True
-        # Decides whether the actual game part is still running and the player hasn't lost yet
+        # Decides whether the game still running and the player hasn't lost yet
         self.playing = False
 
-        # Main loop of the dino game
-        while self.running:
+        # Main loop
+        while True:
 
-            # Wait for either the subprogram to exit or the player to start the game
-            while self.running and not self.playing:
+            # Set the special button to start the game again when pressed
+            self.button.when_pressed = self.start
+
+            # Wait for the player to start the game
+            while not self.playing:
                 sleep(0.01)
 
-            # Continuously run the game until either the subprogram exits or the player loses
-            while self.running and self.playing:
+            # Continuously run the game until the player loses
+            while self.playing:
 
                 # If the time passed since the previous obstacle spawned is greater than the pre-determined time duration
                 if time() - self.previous_obstacle_time > self.next_obstacle_interval:
@@ -52,12 +45,12 @@ class DinoGame:
                     # Determine the integer position of the obstacle
                     index = ceil(self.obstacle_positions[i])
                     # Use this int position to index the correct LED to display the obstacle, and turn it on
-                    self.app.leds[index].on()
+                    self.leds[index].on()
 
                     # If the LED being turned on is anything but the rightmost one, turn off the LED to the right of it
                     # Meaning that when the obstacle moves to the left by one, the previous LED would not stay on
                     if index < 13:
-                        self.app.leds[index + 1].off()
+                        self.leds[index + 1].off()
 
                     # Move the obstacle position to the left by "speed"
                     self.obstacle_positions[i] -= self.speed
@@ -72,7 +65,6 @@ class DinoGame:
                 if time() - self.jump_start > 0.5:
                     # Drop the player back down (i.e. turn the LED back on)
                     self.dino_led.on()
-                    # NOTE: does self-explanatory like this need a special comment?
                     self.on_ground = True
 
                 # If the obstacles list is not empty and the leftmost obstacle moves out of the display
@@ -82,7 +74,7 @@ class DinoGame:
                     # Increase the score by one
                     self.score += 1
                     # Turn off the leftmost LED
-                    self.app.leds[0].off()
+                    self.leds[0].off()
 
                 # Slowly increment the speed of the obstacles' approach
                 self.speed += 0.00001
@@ -92,12 +84,8 @@ class DinoGame:
 
                 sleep(0.01)
 
-            # Early return if the game was forcefully ended
-            if not self.running:
-                return
-
             # Turn off all LEDs
-            for led in self.app.leds:
+            for led in self.leds:
                 led.off()
 
             # Flash the dino LED on and off 4 times to indicate death
@@ -113,7 +101,7 @@ class DinoGame:
             for i, digit in enumerate(binary[::-1]):
                 # If the digit is one, turn on the corresponding LED
                 if digit == "1":
-                    self.app.leds[13 - i].on()
+                    self.leds[13 - i].on()
 
     # Function to start/restart the game
     def start(self) -> None:
@@ -122,10 +110,10 @@ class DinoGame:
         self.playing = True
 
         # Make the special button perform jump when pressed
-        self.app.special_button.when_pressed = self.jump
+        self.button.when_pressed = self.jump
 
         # Turn off all LEDs
-        for led in self.app.leds:
+        for led in self.leds:
             led.off()
 
         # Reset all values to their initial values
@@ -137,7 +125,6 @@ class DinoGame:
         self.previous_obstacle_time = time()
         self.next_obstacle_interval = uniform(0.9, 2)
 
-        # NOTE: Is this self-explanatory?
         self.dino_led.on()
 
     # Method that initiates the player jump
@@ -148,7 +135,6 @@ class DinoGame:
             self.jump_start = time()
             # Turn off the dino LED to indicate a jump
             self.dino_led.off()
-            # NOTE
             self.on_ground = False
 
     # Method that will end the game
@@ -157,19 +143,20 @@ class DinoGame:
         self.playing = False
 
         # Turn off all LEDs
-        for led in self.app.leds:
+        for led in self.leds:
             led.off()
-
-        # Set the special button to start the game again when pressed
-        self.app.special_button.when_pressed = self.start
 
 # The order of the pins corresponding to the physical order of the LEDs
 led_pin_order = [26, 19, 13, 6, 5, 11, 9, 10, 22, 27, 17, 4, 3, 2]
 # Initialize all LEDs
 leds = [LED(pin) for pin in led_pin_order]
 
-# Initialize the button
-button = Button(21)
+# Initialize the buttons
+jump_button = Button(21)
+# Initialize the exit button
+exit_button = Button(20)
+exit_button.when_pressed = sys.exit
 
-game = DinoGame(leds, button)
+# Intialize and start the game
+game = DinoGame(leds, jump_button)
 game.run()
