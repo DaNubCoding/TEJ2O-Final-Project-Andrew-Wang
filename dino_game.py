@@ -44,7 +44,12 @@ class DinoGame:
                     # Reset the time the previous obstacle spawned to right now
                     self.previous_obstacle_time = time()
                     # Determine a new time duration before the next one spawns
-                    self.next_obstacle_interval = uniform(0.9, 2)
+                    self.next_obstacle_interval = uniform(self.minimum_interval, self.minimum_interval * 2)
+                    # Lower the minimum interval slightly to make the game harder
+                    self.minimum_interval -= 0.01
+                    # Make sure the interval doesn't go under 0.6 seconds
+                    if self.minimum_interval < 0.6:
+                        self.minimum_interval = 0.6
                     # Add a new entry to the list of obstacle positions
                     self.obstacle_positions.append(13)
 
