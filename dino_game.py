@@ -9,10 +9,9 @@ from random import uniform
 from math import ceil
 
 class DinoGame:
-    def __init__(self, app: App, emulator: Emulator) -> None:
+    def __init__(self, app: App) -> None:
         print("Initializing dino game")
         self.app = app
-        self.emulator = emulator
 
         self.dino_led = self.app.leds[2]
 

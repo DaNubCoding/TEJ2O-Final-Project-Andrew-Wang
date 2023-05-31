@@ -7,10 +7,9 @@ if TYPE_CHECKING:
 from time import sleep
 
 class Calculator:
-    def __init__(self, app: App, emulator: Emulator) -> None:
+    def __init__(self, app: App) -> None:
         print("Initializing calculator")
         self.app = app
-        self.emulator = emulator
         self.operation_led = self.app.leds[0]
         self.sign_led = self.app.leds[1]
         self.number_leds = self.app.leds[2:][::-1]
@@ -23,6 +22,7 @@ class Calculator:
             sleep(0.01)
 
     def swap_addition_subtraction(self) -> None:
+        print("hi")
         self.subtraction = not self.subtraction
         self.operation_led.toggle()
 
