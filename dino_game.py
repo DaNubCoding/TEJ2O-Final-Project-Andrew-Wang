@@ -7,6 +7,10 @@ import sys
 
 # Main class that handles all game logic
 class DinoGame:
+
+    # Arguments:
+    # leds: A list of LED objects in left to right order
+    # jump_button: A Button object that will make the dino jump
     def __init__(self, leds: list[LED], jump_button: Button) -> None:
         # Create a reference to the list of LEDs and the jump button
         self.leds = leds
@@ -161,6 +165,7 @@ leds = [LED(pin) for pin in led_pin_order]
 
 # Initialize the buttons
 jump_button = Button(21)
+
 # Initialize the exit button
 exit_button = Button(20)
 exit_button.when_pressed = sys.exit
