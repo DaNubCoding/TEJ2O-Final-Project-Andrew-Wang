@@ -8,8 +8,6 @@ from gpiozero import LED, Button
 from calculator import Calculator
 from visualizer import Visualizer
 from dino_game import DinoGame
-from threading import Thread
-from timer import Timer
 
 from time import sleep
 
@@ -27,7 +25,7 @@ class App:
 
         self.mode_button.when_pressed = self.next_mode
 
-        self.modes = [Calculator, Visualizer, DinoGame, Timer]
+        self.modes = [Calculator, Visualizer, DinoGame]
         self.mode_index = 0
         self.mode = Calculator(self)
 

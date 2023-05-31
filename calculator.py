@@ -22,7 +22,6 @@ class Calculator:
             sleep(0.01)
 
     def swap_addition_subtraction(self) -> None:
-        print("hi")
         self.subtraction = not self.subtraction
         self.operation_led.toggle()
 
