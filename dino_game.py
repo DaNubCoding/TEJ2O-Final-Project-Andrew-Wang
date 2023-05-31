@@ -1,3 +1,16 @@
+"""
+This program will run a Google Dino Game clone on LEDs.
+Pressing the exit button will exit the program at any time. 
+Pressing the jump button will make the dino jump.
+There are obstacles indicated by LEDs approaching the dino,
+your goal is to jump before colliding with an obstacle, and survive for as long as possible.
+When you hit an obstacle, the game will end, and then show you your score.
+Hitting the jump button again will restart the game. 
+
+Made by Andrew Wang
+Completed June 16
+"""
+
 # Imports
 from gpiozero import LED, Button
 from time import sleep, time
