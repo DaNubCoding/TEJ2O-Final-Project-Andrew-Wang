@@ -19,10 +19,10 @@ class App:
         self.leds = [LED(self.emulator, pin) for pin in self.led_pin_order]
 
         self.buttons = [Button(self.emulator, pin) for pin in self.button_pin_order]
-        self.mode_button = Button(self.emulator, 14)
         self.special_button = Button(self.emulator, 15)
+        self.mode_button = Button(self.emulator, 14)
 
-        self.special_button.when_pressed = self.next_mode
+        self.mode_button.when_pressed = self.next_mode
 
         self.modes = [Calculator]
         self.mode_index = 0
@@ -39,7 +39,15 @@ class App:
     def next_mode(self) -> None:
         self.mode_index += 1
         self.mode_index %= len(self.modes)
+
+        for button in self.buttons:
+            button.when_pressed = lambda: print("empty function")
+        self.special_button.when_pressed = lambda: print("empty function")
+
         self.mode = self.modes[self.mode_index](self, self.emulator)
+
+        for led in self.leds:
+            led.off()
 
 app = App()
 app.run()
