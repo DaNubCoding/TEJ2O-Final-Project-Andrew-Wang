@@ -11,10 +11,16 @@ class Calculator:
         self.app = app
         self.emulator = emulator
 
+        for led in self.app.leds:
+            led.off()
+
     def run(self) -> None:
         self.current_number = 0
         for i, button in enumerate(self.app.buttons):
-            button.when_pressed = lambda power=i: self.binary_input(power)
+            button.when_pressed = lambda power=9 - i: self.binary_input(power)
+
+        while True:
+            sleep(0.01)
 
     def binary_input(self, power: int) -> None:
         self.current_number += 2 ** power
