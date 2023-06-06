@@ -11,6 +11,9 @@ class Calculator:
         print("Initializing calculator")
         self.app = app
         self.emulator = emulator
+        self.operation_led = self.app.leds[0]
+        self.sign_led = self.app.leds[1]
+        self.number_leds = self.app.leds[2:][::-1]
 
         self.reset()
 
@@ -21,22 +24,23 @@ class Calculator:
 
     def swap_addition_subtraction(self) -> None:
         self.subtraction = not self.subtraction
-        self.emulator.leds[-1].toggle()
+        self.operation_led.toggle()
 
     def binary_input_1(self, power: int) -> None:
         self.current_binary[power] = not self.current_binary[power]
-        self.emulator.leds[power].toggle()
+        self.number_leds[power].toggle()
         self.app.special_button.when_pressed = self.next_number
 
     def binary_input_2(self, power: int) -> None:
         self.current_binary[power] = not self.current_binary[power]
-        self.emulator.leds[power].toggle()
+        self.number_leds[power].toggle()
 
     def next_number(self) -> None:
         for i, digit in enumerate(self.current_binary):
             self.number_1 += digit * 2 ** i
+        print(f"Number 1 --> {self.number_1}")
 
-        for led in self.app.leds[:-1]:
+        for led in self.number_leds:
             led.off()
 
         self.app.special_button.when_pressed = self.calculate
@@ -48,8 +52,9 @@ class Calculator:
     def calculate(self) -> None:
         for i, digit in enumerate(self.current_binary):
             self.number_2 += digit * 2 ** i
+        print(f"Number 2 --> {self.number_2}")
 
-        for led in self.app.leds[:-1]:
+        for led in self.number_leds:
             led.off()
 
         if not self.subtraction:
@@ -61,10 +66,10 @@ class Calculator:
         binary = bin(answer)[2:]
         for i, digit in enumerate(binary[::-1]):
             if digit == "1":
-                self.app.leds[i].on()
+                self.number_leds[i].on()
 
         if negative:
-            self.app.leds[-2].on()
+            self.sign_led.on()
 
         self.app.special_button.when_pressed = self.reset
 

@@ -48,14 +48,14 @@ class Button:
         pygame.draw.circle(self.emulator.screen, (150 * self.state,) * 3, self.pos + VEC(40, 40), 30)
 
 class LED:
-    _current_pos = 1200
+    _current_pos = 150
 
     def __init__(self, emulator: Emulator, pin: int) -> None:
         self.emulator = emulator
         self.emulator.leds.append(self)
 
         self.pos = VEC(self.__class__._current_pos, 100)
-        self.__class__._current_pos -= 80
+        self.__class__._current_pos += 80
 
         self.pin = pin
         self.state = 0
