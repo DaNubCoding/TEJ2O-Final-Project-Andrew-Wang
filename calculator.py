@@ -12,17 +12,7 @@ class Calculator:
         self.app = app
         self.emulator = emulator
 
-        for led in self.app.leds:
-            led.off()
-
-        self.subtraction = False
-        self.current_binary = [False] * 10
-        self.number_1 = 0
-        self.number_2 = 0
-
-        self.app.special_button.when_pressed = self.swap_addition_subtraction
-        for i, button in enumerate(self.app.buttons):
-            button.when_pressed = lambda power=9-i: self.binary_input_1(power)
+        self.reset()
 
     def run(self) -> None:
         self.running = True
@@ -53,6 +43,8 @@ class Calculator:
         for i, button in enumerate(self.app.buttons):
             button.when_pressed = lambda power=9-i: self.binary_input_2(power)
 
+        self.current_binary = [False] * 10
+
     def calculate(self) -> None:
         for i, digit in enumerate(self.current_binary):
             self.number_2 += digit * 2 ** i
@@ -60,4 +52,31 @@ class Calculator:
         for led in self.app.leds[:-1]:
             led.off()
 
-        print(self.number_1, self.number_2)
+        if not self.subtraction:
+            answer = self.number_1 + self.number_2
+        else:
+            answer = self.number_1 - self.number_2
+
+        negative = answer < 0
+        binary = bin(answer)[2:]
+        for i, digit in enumerate(binary[::-1]):
+            if digit == "1":
+                self.app.leds[i].on()
+
+        if negative:
+            self.app.leds[-2].on()
+
+        self.app.special_button.when_pressed = self.reset
+
+    def reset(self) -> None:
+        for led in self.app.leds:
+            led.off()
+
+        self.subtraction = False
+        self.current_binary = [False] * 10
+        self.number_1 = 0
+        self.number_2 = 0
+
+        self.app.special_button.when_pressed = self.swap_addition_subtraction
+        for i, button in enumerate(self.app.buttons):
+            button.when_pressed = lambda power=9-i: self.binary_input_1(power)

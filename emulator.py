@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pygame.math import Vector2 as VEC
-from threading import Thread
 import pygame
 
 class Button:
