@@ -7,6 +7,7 @@ Made by Andrew Wang
 from emulator import LED, Button, Emulator
 from calculator import Calculator
 from visualizer import Visualizer
+from dino_game import DinoGame
 from threading import Thread
 
 class App:
@@ -24,7 +25,7 @@ class App:
 
         self.mode_button.when_pressed = self.next_mode
 
-        self.modes = [Calculator, Visualizer]
+        self.modes = [Calculator, Visualizer, DinoGame]
         self.mode_index = 0
         self.mode = Calculator(self, self.emulator)
 
@@ -46,10 +47,10 @@ class App:
 
         self.mode.running = False
 
-        self.mode = self.modes[self.mode_index](self, self.emulator)
-
         for led in self.leds:
             led.off()
+
+        self.mode = self.modes[self.mode_index](self, self.emulator)
 
 app = App()
 app.run()

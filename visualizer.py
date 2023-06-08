@@ -13,6 +13,9 @@ class Visualizer:
         self.app = app
         self.emulator = emulator
 
+        for led in self.app.leds:
+            led.off()
+
         self.easing_functions = [
             tween.easeOutSine,
             tween.easeOutQuad,
@@ -37,7 +40,7 @@ class Visualizer:
         self.running = True
         self.playing = False
         while self.running:
-            while not self.playing:
+            while self.running and not self.playing:
                 sleep(0.01)
 
             easing_function = self.easing_functions[self.selected]
