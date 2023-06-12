@@ -9,6 +9,7 @@ from calculator import Calculator
 from visualizer import Visualizer
 from dino_game import DinoGame
 from threading import Thread
+from timer import Timer
 
 class App:
     def __init__(self) -> None:
@@ -25,7 +26,7 @@ class App:
 
         self.mode_button.when_pressed = self.next_mode
 
-        self.modes = [Calculator, Visualizer, DinoGame]
+        self.modes = [Calculator, Visualizer, DinoGame, Timer]
         self.mode_index = 0
         self.mode = Calculator(self, self.emulator)
 
