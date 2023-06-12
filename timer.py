@@ -33,7 +33,8 @@ class Timer:
                 if self.progress < 0:
                     self.started = False
 
-            self.app.special_button.when_pressed = self.cancel
+            if self.running:
+                self.app.special_button.when_pressed = self.cancel
 
             while self.running and not self.canceled:
                 for led in self.app.leds:
@@ -43,7 +44,8 @@ class Timer:
                     led.off()
                 sleep(0.3)
 
-            self.reset()
+            if self.running:
+                self.reset()
 
     def input_binary(self, power: int) -> None:
         self.current_binary[power] = not self.current_binary[power]
