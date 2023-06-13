@@ -10,6 +10,7 @@ from visualizer import Visualizer
 from dino_game import DinoGame
 from threading import Thread
 from timer import Timer
+from time import sleep
 
 class App:
     def __init__(self) -> None:
@@ -47,6 +48,7 @@ class App:
         self.special_button.when_pressed = lambda: print("empty function")
 
         self.mode.running = False
+        sleep(0.1)
 
         for led in self.leds:
             led.off()

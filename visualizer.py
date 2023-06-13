@@ -43,10 +43,11 @@ class Visualizer:
             while self.running and not self.playing:
                 sleep(0.01)
 
-            easing_function = self.easing_functions[self.selected]
+            if self.running:
+                easing_function = self.easing_functions[self.selected]
 
-            for button in self.app.buttons:
-                button.when_pressed = lambda: print("empty function")
+                for button in self.app.buttons:
+                    button.when_pressed = lambda: print("empty function")
 
             while self.running and self.playing:
                 linear_value = 0
@@ -62,8 +63,9 @@ class Visualizer:
                     self.app.leds[led_index].on()
                     sleep(0.1)
 
-            for i, button in enumerate(self.app.buttons):
-                button.when_pressed = lambda index=i: self.set_easing_function(index)
+            if self.running:
+                for i, button in enumerate(self.app.buttons):
+                    button.when_pressed = lambda index=i: self.set_easing_function(index)
 
     def set_easing_function(self, index: int) -> None:
         self.selected = index
