@@ -15,7 +15,6 @@ class App:
         # The order of the pins corresponding to the physical order of the buttons and LEDs
         self.led_pin_order = [26, 19, 13, 6, 5, 11, 9, 10, 22, 27, 17, 4, 3, 2]
         self.button_pin_order = [21, 20, 16, 12, 7, 8, 25, 24, 23, 18]
-        # 16 
 
         # Initialize all LEDs
         self.leds = [LED(pin) for pin in self.led_pin_order]
@@ -30,12 +29,10 @@ class App:
         # Initialize what the mode button does (move to the next mode)
         self.mode_button.when_pressed = self.next_mode
 
-        # List of the modes in the order they will be toggled
-        self.modes = [Calculator, Visualizer, DinoGame]
         # Index of the current mode
         self.mode_index = 0
         # Initialize the first mode: calculator
-        self.mode = Calculator(self)
+        self.game = DinoGame(self)
 
     # Method that starts the program
     def run(self) -> None:

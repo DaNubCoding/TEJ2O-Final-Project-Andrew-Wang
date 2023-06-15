@@ -4,14 +4,16 @@ if TYPE_CHECKING:
     from emulator import Emulator
     from main import App
 
+from gpiozero import LED, Button
 from time import sleep, time
 from random import uniform
 from math import ceil
 
 class DinoGame:
-    def __init__(self, app: App) -> None:
+    def __init__(self, leds: list[LED], button: Button) -> None:
         print("Initializing dino game")
-        self.app = app
+        self.leds = leds
+        self.button = button
 
         # Create a shortcut reference to the LED that represents the dino
         self.dino_led = self.app.leds[2]
@@ -160,3 +162,14 @@ class DinoGame:
 
         # Set the special button to start the game again when pressed
         self.app.special_button.when_pressed = self.start
+
+# The order of the pins corresponding to the physical order of the LEDs
+led_pin_order = [26, 19, 13, 6, 5, 11, 9, 10, 22, 27, 17, 4, 3, 2]
+# Initialize all LEDs
+leds = [LED(pin) for pin in led_pin_order]
+
+# Initialize the button
+button = Button(21)
+
+game = DinoGame(leds, button)
+game.run()
