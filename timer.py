@@ -7,10 +7,10 @@ if TYPE_CHECKING:
 from time import sleep, time
 
 class Timer:
-    def __init__(self, app: App, emulator: Emulator) -> None:
+    def __init__(self, app: App) -> None:
         print("Initializing timer")
         self.app = app
-        self.emulator = emulator
+
         self.number_leds = self.app.leds[::-1]
 
         self.reset()

@@ -8,10 +8,9 @@ import pytweening as tween
 from time import sleep
 
 class Visualizer:
-    def __init__(self, app: App, emulator: Emulator) -> None:
+    def __init__(self, app: App) -> None:
         print("Initializing visualizer")
         self.app = app
-        self.emulator = emulator
 
         for led in self.app.leds:
             led.off()
