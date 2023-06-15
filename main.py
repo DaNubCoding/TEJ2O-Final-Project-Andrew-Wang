@@ -4,38 +4,34 @@
 Made by Andrew Wang
 """
 
-# Import from other files
-from emulator import LED, Button, Emulator
-from calculator import Calculator
-from visualizer import Visualizer
+from gpiozero import LED, Button
 from dino_game import DinoGame
-from threading import Thread
-from timer import Timer
+
+from time import sleep
 
 # App class that will handle all the main logic
 class App:
     def __init__(self) -> None:
-        self.emulator = Emulator()
-
         # The order of the pins corresponding to the physical order of the buttons and LEDs
         self.led_pin_order = [26, 19, 13, 6, 5, 11, 9, 10, 22, 27, 17, 4, 3, 2]
         self.button_pin_order = [21, 20, 16, 12, 7, 8, 25, 24, 23, 18]
+        # 16 
 
         # Initialize all LEDs
-        self.leds = [LED(self.emulator, pin) for pin in self.led_pin_order]
+        self.leds = [LED(pin) for pin in self.led_pin_order]
 
         # Initialize all buttons
-        self.buttons = [Button(self.emulator, pin) for pin in self.button_pin_order]
+        self.buttons = [Button(pin) for pin in self.button_pin_order]
         # The button that has special functionality
-        self.special_button = Button(self.emulator, 15)
+        self.special_button = Button(15)
         # The button that will toggle between the four modes
-        self.mode_button = Button(self.emulator, 14)
+        self.mode_button = Button(14)
 
         # Initialize what the mode button does (move to the next mode)
         self.mode_button.when_pressed = self.next_mode
 
         # List of the modes in the order they will be toggled
-        self.modes = [Calculator, Visualizer, DinoGame, Timer]
+        self.modes = [Calculator, Visualizer, DinoGame]
         # Index of the current mode
         self.mode_index = 0
         # Initialize the first mode: calculator
@@ -43,9 +39,10 @@ class App:
 
     # Method that starts the program
     def run(self) -> None:
-        # Create a thread that will run the current mode, and start it
-        Thread(target=self.run_modes, daemon=True).start()
-        self.emulator.run()
+        # Thread(target=self.run_modes, daemon=True).start()
+        # self.emulator.run()
+        while True:
+            self.mode.run()
 
     # Method that will run the logic of the current mode, this will run in a thread
     def run_modes(self) -> None:
