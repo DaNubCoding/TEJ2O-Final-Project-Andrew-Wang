@@ -58,20 +58,24 @@ class DinoGame:
 
                 # If the time passed since the previous obstacle spawned is greater than the pre-determined time duration
                 if time() - self.previous_obstacle_time > self.next_obstacle_interval:
+
                     # Reset the time the previous obstacle spawned to right now
                     self.previous_obstacle_time = time()
                     # Determine a new time duration before the next one spawns
                     self.next_obstacle_interval = uniform(self.minimum_interval, self.minimum_interval * 2)
+
                     # Lower the minimum interval slightly to make the game harder
                     self.minimum_interval -= 0.01
                     # Make sure the interval doesn't go under 0.6 seconds
                     if self.minimum_interval < 0.6:
                         self.minimum_interval = 0.6
+
                     # Add a new entry to the list of obstacle positions
                     self.obstacle_positions.append(13)
 
                 # Iterate through all obstacle positions
                 for i in range(len(self.obstacle_positions)):
+
                     # Determine the integer position of the obstacle
                     index = ceil(self.obstacle_positions[i])
                     # Use this int position to index the correct LED to display the obstacle, and turn it on
@@ -99,6 +103,7 @@ class DinoGame:
 
                 # If the obstacles list is not empty and the leftmost obstacle moves out of the display
                 if self.obstacle_positions and self.obstacle_positions[0] <= -1:
+
                     # Remove the leftmost obstacle position
                     self.obstacle_positions.pop(0)
                     # Increase the score by one
